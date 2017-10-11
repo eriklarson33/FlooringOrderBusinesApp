@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+          http://www.springframework.org/schema/beans/spring-beans.xsd
+          http://www.springframework.org/schema/mvc
+          http://www.springframework.org/schema/mvc/spring-mvc.xsd
+          http://www.springframework.org/schema/tx
+          http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+          http://www.springframework.org/schema/context
+          http://www.springframework.org/schema/context/spring-context.xsd
+          http://www.springframework.org/schema/aop  
+          http://www.springframework.org/schema/aop/spring-aop-3.2.xsd">
+
+    <!-- Bean definitions go here -->
+<!--    public static void main(String[] args) throws FlooringProgramPersistenceException {
+        
+        UserIO myIO = new UserIOConsoleImpl();
+        Order order = new Order();
+        FlooringProduct product = new FlooringProduct();
+        
+        FlooringProgramView view = new FlooringProgramView(myIO, order);
+        FlooringProductsDaoImpl productsDao = new FlooringProductsDaoImpl(product);
+        FlooringOrdersDaoImpl ordersDao = new FlooringOrdersDaoImpl(productsDao);
+        TaxesDaoImpl taxes = new TaxesDaoImpl();
+        FlooringProgramService service = new FlooringProgramService(
+                ordersDao,taxes, productsDao, order, product);
+                
+        FlooringProgramController controller = new FlooringProgramController(
+        service, view);
+        
+        controller.run();
+                
+    }-->
+    
+    <bean id="myIO" class="com.sg.javaflooringmastery.ui.UserIOConsoleImpl"/>
+    <bean id="order" class="com.sg.javaflooringmastery.dto.Order"/>
+    <bean id ="product" class="com.sg.javaflooringmastery.dto.FlooringProduct"/>
+    <bean id ="stateTax" class="com.sg.javaflooringmastery.dto.StateTax"/>
+   
+    <bean id="view" class="com.sg.javaflooringmastery.ui.FlooringProgramView">
+        <constructor-arg ref="myIO"/>
+    </bean>
+    <bean id="productsDao" class="com.sg.javaflooringmastery.dao.FlooringProductsDaoImpl">
+        <constructor-arg ref="product"/>
+    </bean>
+    <bean id="taxes" class="com.sg.javaflooringmastery.dao.TaxesDaoImpl">
+        <constructor-arg ref = "stateTax"/>
+    </bean>
+    <bean id="ordersDao" class="com.sg.javaflooringmastery.dao.FlooringOrdersDaoImpl">
+        <constructor-arg ref="productsDao"/>
+        <constructor-arg ref="taxes"/>
+    </bean>
+    
+    <bean id="service" class="com.sg.javaflooringmastery.service.FlooringProgramService">
+        <constructor-arg ref="ordersDao"/>
+        <constructor-arg ref="taxes"/>
+        <constructor-arg ref="productsDao"/>
+        <constructor-arg ref="order"/>
+        <constructor-arg ref="product"/>
+<!--        <constructor-arg ref="controller"/>-->
+    </bean>
+    <bean id="controller" class="com.sg.javaflooringmastery.controller.FlooringProgramController">
+        <constructor-arg ref="service"/>
+        <constructor-arg ref="view"/>
+    </bean>
+
+</beans>
